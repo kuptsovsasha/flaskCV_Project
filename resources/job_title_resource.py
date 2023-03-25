@@ -1,3 +1,4 @@
+import os
 import re
 
 import openai
@@ -6,7 +7,7 @@ from flask import request
 
 
 # Set your OpenAI API key
-openai.api_key = "sk-"
+openai.api_key = os.environ.get('OPEN_API_KEY')
 
 
 # Define the generate_text function

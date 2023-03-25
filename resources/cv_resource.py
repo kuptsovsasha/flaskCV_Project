@@ -1,8 +1,13 @@
+import os
+
 import openai
 from flask_restful import Resource
 from flask import request, make_response
 
 from pdf_generator import generate_pdf
+
+# Set your OpenAI API key
+openai.api_key = os.environ.get('OPEN_API_KEY')
 
 
 # Define the generate_text function

@@ -3,6 +3,8 @@ from flask_restful import Api
 
 from resources.cv_resource import CVResource
 from resources.job_title_resource import JobTitleResource
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 api = Api(app)

@@ -60,7 +60,19 @@ def generate_pdf(cv_data, filename):
         elements.append(skills_table)
         elements.append(Spacer(1, 20))
 
-    # Other sections (projects, awards, languages, volunteer work) can be added similarly
+    # Projects
+    if cv_data["projects"]:
+        elements.append(Paragraph("Projects", styles["Subheader"]))
+        for experience in cv_data["projects"]:
+            elements.append(Paragraph(
+                f"Working at {experience['title']}. Project's goal was {experience['goal']}\n"
+                f"For this project I use: {experience['skills']} ",
+                styles["Normal"]))
+            elements.append(Paragraph(experience["description"], styles["Normal"]))
+            elements.append(Spacer(1, 10))
+        elements.append(Spacer(1, 20))
+
+    # Other sections ( awards, languages, volunteer work) can be added similarly
 
     # Build
     doc.build(elements)
