@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CV Builder{% endblock %}</title>
+  {% block head %}
+    {{ bootstrap.load_css() }}
+  {% endblock %}
+      <style>
+        .navbar-custom {
+          background-image: url('{{ url_for("static", filename="bg.png") }}');
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center;
+          {#filter: blur(10px);#}
+        }
+          .navbar-custom .navbar-brand {
+        color: #ffffff; /* Change this to the desired text color */
+      }
+      </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom" style="height: 30px">
+          <a class="navbar-brand" href="{{ url_for('home') }}">Home</a>
+    </nav>
+  {% block content %}{% endblock %}
+  {% block scripts %}
+    {{ bootstrap.load_js() }}
+  {% endblock %}
+{% block extra_js %}{% endblock %}
+</body>
+</html>

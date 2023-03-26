@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Education - CV Builder{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+
+    .bg-image {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .bg-image::before {
+      content: "";
+      background-image: url('{{ url_for('static', filename='bg.png') }}');
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px); /* Adjust the blur value as desired */
+      position: absolute;
+      width: 110%;
+      height: 110%;
+      top: -5%;
+      left: -5%;
+      z-index: -1;
+    }
+
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    .btn-small {
+      width: 30%;
+      margin-top: 1rem;
+    }
+    .btn-secondary {
+      width: 30%;
+      margin-top: 1rem;
+    }
+     .text-center {
+      text-align: center;
+      width: 40%; /* Adjust the width as desired */
+      margin: 0 auto;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="bg-image">
+    <div class="container center">
+         <h1 class="text-white" id="welcome-text">Education</h1>
+         <div class="text-center">
+            <form action="{{ url_for('views.process_education_experience') }}" method="post" id="education_experience_form">
+              <div class="form-group">
+                <label for="place" class="text-white">Place:</label>
+                <input type="text" class="form-control" id="place" name="place" placeholder="Enter place where you studied" required>
+              </div>
+              <div class="form-group">
+                <label for="institution" class="text-white">Institution:</label>
+                <input type="text" class="form-control" id="institution" name="institution" placeholder="Enter Institution" required>
+              </div>
+              <div class="form-group">
+                <label for="degree" class="text-white">Degree:</label>
+                <input type="text" class="form-control" id="degree" name="degree" placeholder="Enter your degree" required>
+              </div>
+              <div class="form-group">
+                <label for="year" class="text-white">Year:</label>
+                <input type="text" class="form-control" id="year" name="year" placeholder="Enter year when you finished your studying" required>
+              </div>
+              <button type="button" class="btn btn-secondary mr-2" id="add_more">Add more</button>
+              <button type="submit" class="btn btn-primary btn-small">Next</button>
+            </form>
+         </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_js %}
+ <script>
+    let form = document.getElementById("education_experience_form");
+    let formDataList = [];
+
+    document.getElementById("add_more").addEventListener("click", function() {
+      let formData = {
+        "place": form.place.value,
+        "institution": form.institution.value,
+        "degree": form.degree.value,
+        "year": form.year.value
+      };
+
+      formDataList.push(formData);
+      form.reset();
+    });
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      let finalFormData = {
+        "place": form.place.value,
+        "institution": form.institution.value,
+        "degree": form.degree.value,
+        "year": form.year.value
+      };
+
+      formDataList.push(finalFormData);
+
+      // Send formDataList to your Flask view
+      fetch("{{ url_for('views.process_education_experience') }}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formDataList)
+      })
+      .then(function(response) {
+        if (response.ok) {
+          window.location.href = "{{ url_for('projects') }}";
+        } else {
+          alert("Error submitting data");
+        }
+      });
+    });
+  </script>
+{% endblock %}

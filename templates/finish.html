@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Thank You - CV Builder{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+  .bg-image {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .bg-image::before {
+      content: "";
+      background-image: url('{{ url_for('static', filename='bg.png') }}');
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px);
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .bg-overlay {
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60%; /* set width of new image */
+      height: 60%; /* set height of new image */
+      background-image: url('{{ url_for('static', filename='download.jpeg') }}');
+      background-size: cover;
+      background-position: center;
+      z-index: 0; /* set lower than the container */
+    }
+
+    .container {
+      position: relative; /* make container relative for z-index to work */
+      z-index: 1;
+    }
+
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+   .text-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40%;
+      padding: 2rem;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      margin: 0 auto;
+      max-width: 80%;
+    }
+
+    .text-center {
+      text-align: center;
+      margin: 0;
+    }
+
+    .text-center h2 {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .text-center a {
+      color: #008CBA;
+    }
+
+    .text-center a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .text-container {
+        height: auto;
+      }
+    }
+
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="bg-image">
+    <div class="text-container">
+      <div class="text-center">
+        <h2>If you like this site, and it was helpful for you feel free to send few cents to my pay-pal "kuptsovsasha@gmail.com"!
+          It helps this site stay free and grow up!
+          Thank You!</h2>
+        <h2>Also I would be very glad if you want to help Ukraine!
+          Here <a href="https://savelife.in.ua/en/">https://savelife.in.ua/en/</a> is the biggest foundation in Ukraine and if you decide help - that is the right place.
+          But even if you only don't listen russian propaganda it will be huge support for us!</h2>
+      </div>
+    </div>
+    <div class="bg-overlay"></div> <!-- new element for overlay -->
+    <div class="container center">
+      <!-- your content here -->
+    </div>
+  </div>
+{% endblock %}

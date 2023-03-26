@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ personal_info.full_name }}- CV</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333;
+            margin: 2rem;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 0.5rem;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .job, .education, .project, .awards, .volunteer, .languages {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Personal Information</h1>
+    <div class="section personal_info">
+        <p><strong>Name:</strong> {{ personal_info.full_name }}</p>
+        <p><strong>Phone:</strong> {{ personal_info.phone }}</p>
+        <p><strong>Email:</strong> {{ personal_info.email }}</p>
+        <p><strong>LinkedIn:</strong> {{ personal_info.linkedin }}</p>
+    </div>
+
+    <h1>Summary</h1>
+    <div class="section summary">
+        <p>{{ summary }}</p>
+    </div>
+
+    <h1>Work Experience</h1>
+    <div class="section work_experience">
+        {% for job in work_experience %}
+            <div class="job">
+                <h2>{{ job.job_title }} at {{ job.company }}</h2>
+                <p><strong>Start Date:</strong> {{ job.start_date }}</p>
+                <p><strong>End Date:</strong> {{ job.end_date }}</p>
+                <ul>
+                    {% for skill in job.skills %}
+                        <li>{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+                <p>{{ job.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h1>Education</h1>
+    <div class="section education">
+        {% for edu in education %}
+            <div class="education">
+                <h2>{{ edu.degree }} - {{ edu.institution }}</h2>
+                <p><strong>Location:</strong> {{ edu.place }}</p>
+                <p><strong>Year:</strong> {{ edu.year }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h1>Skills</h1>
+    <div class="section skills">
+        <ul>
+            {% for skill in skills %}
+                <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <h1>Projects</h1>
+    <div class="section projects">
+        {% for project in projects %}
+            <div class="project">
+                <h2>{{ project.title }}</h2>
+                <p><strong>Goal:</strong> {{ project.goal }}</p>
+                <ul>
+                    {% for skill in project.skills %}
+                        <li>{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+                <p>{{ project.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    {% if awards %}
+        <h1>Awards</h1>
+        <div class="section awards">
+            <ul>
+                {% for award in awards %}
+                    <li>{{ award }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if languages %}
+        <h1>Languages</h1>
+        <div class="section languages">
+            <ul>
+                {% for language in languages %}
+                    <li>{{ language }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+     {% if volunteer_work %}
+        <h1>Volunteer Work</h1>
+        <div class="section volunteer">
+            <ul>
+                {% for work in volunteer_work %}
+                    <li>{{ work }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</body>
+</html>

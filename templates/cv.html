@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}CV Preview - CV Builder{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+
+    .bg-image {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .bg-image::before {
+      content: "";
+      background-image: url('{{ url_for('static', filename='bg.png') }}');
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px); /* Adjust the blur value as desired */
+      position: absolute;
+      width: 110%;
+      height: 110%;
+      top: -5%;
+      left: -5%;
+      z-index: -1;
+    }
+
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    .btn-small {
+      width: 30%;
+      margin-top: 1rem;
+    }
+      .text-center {
+      text-align: center;
+      width: 60%; /* Adjust the width as desired */
+      margin: 0 auto;
+      height: 700px; /* Set a fixed height */
+      overflow-y: scroll; /* Add this line to enable vertical scrolling */
+      position: relative; /* Add this line to make the text container positioned relative to the background */
+      z-index: 1; /* Add this line to make the text container appear above the background */
+    }
+    .text-center::-webkit-scrollbar {
+      width: 10px; /* Set the width of the scrollbar */
+    }
+
+    .text-center::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1); /* Set the background color of the scrollbar track (transparent) */
+      border-radius: 10px; /* Add rounded corners to the scrollbar track */
+    }
+
+    .text-center::-webkit-scrollbar-thumb {
+      background: rgba(50, 50, 50, 0.5); /* Set the background color of the scrollbar thumb (semi-transparent) */
+      border-radius: 10px; /* Add rounded corners to the scrollbar thumb */
+    }
+
+    .text-center::-webkit-scrollbar-thumb:hover {
+      background: rgba(50, 50, 50, 0.7); /* Change the background color of the scrollbar thumb when hovered */
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="bg-image">
+    <div class="container center">
+         <h1 class="text-white" id="welcome-text">CV Preview</h1>
+         <div class="text-center">
+                <form  id="pdf-form">
+                  <h3 class="text-white">Personal Info</h3>
+                  <div class="form-group">
+                    <label for="full_name" class="text-white">Full Name:</label>
+                    <input type="text" name="full_name" class="form-control" value="{{ cv['personal_info']['full_name'] }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="email" class="text-white">Email:</label>
+                    <input type="text" name="email" class="form-control" value="{{ cv['personal_info']['email'] }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="phone" class="text-white">Phone:</label>
+                    <input type="text" name="phone" class="form-control" value="{{ cv['personal_info']['phone'] }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="linkedin" class="text-white">LinkedIn:</label>
+                    <input type="text" name="linkedin" class="form-control" value="{{ cv['personal_info']['linkedin'] }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="summary" class="text-white">Summary:</label>
+                      <textarea class="form-control" id="summary" name="summary" rows="3">{{ cv['summary'] }}"</textarea>
+                  </div>
+                  {% if cv['work_experience'] %}
+                      <h3 class="text-white">Work Experience</h3>
+                      {% for work_exp in cv['work_experience'] %}
+                        <div class="form-group">
+                          <label for="job_title_{{loop.index0}}" class="text-white">Job Title:</label>
+                          <input type="text" class="form-control" id="job_title_{{loop.index0}}" name="job_title_{{loop.index0}}" value="{{ work_exp['job_title'] }}">
+                        </div>
+                        <div class="form-group">
+                          <label for="start_date_{{loop.index0}}" class="text-white">Start Date:</label>
+                          <input type="date" class="form-control" id="start_date_{{loop.index0}}" name="start_date_{{loop.index0}}" value="{{ work_exp['start_date'] }}">
+                        </div>
+                        <div class="form-group">
+                          <label for="end_date_{{loop.index0}}" class="text-white">End Date:</label>
+                          <input type="date" class="form-control" id="end_date_{{loop.index0}}" name="end_date_{{loop.index0}}" value="{{ work_exp['end_date'] }}">
+                        </div>
+                        <div class="form-group">
+                          <label for="company_{{loop.index0}}" class="text-white">Company:</label>
+                          <input type="text" class="form-control" id="company_{{loop.index0}}" name="company_{{loop.index0}}" value="{{ work_exp['company'] }}">
+                        </div>
+                        <div class="form-group">
+                          <label for="skills_{{loop.index0}}" class="text-white">Skills:</label>
+                          <textarea class="form-control" id="skills_{{loop.index0}}" name="work_skills_{{loop.index0}}" rows="3">{{ work_exp['skills'] }}</textarea>
+                        </div>
+                        <div class="form-group">
+                          <label for="description_{{loop.index0}}" class="text-white">Description:</label>
+                          <textarea class="form-control" id="description_{{loop.index0}}" name="description_{{loop.index0}}" rows="3">{{ work_exp['description'] }}</textarea>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                 {% if cv['education'] %}
+                     <h3 class="text-white">Education</h3>
+                     {% for education in cv['education'] %}
+                          <div class="form-group">
+                            <label for="place_{{ loop.index0 }}" class="text-white">Place:</label>
+                            <input type="text" class="form-control" id="place_{{ loop.index0 }}" name="place_{{ loop.index0 }}" value="{{ education['place'] }}">
+                          </div>
+                          <div class="form-group">
+                            <label for="institution_{{ loop.index0 }}" class="text-white">Institution:</label>
+                            <input type="text" class="form-control" id="institution_{{ loop.index0 }}" name="institution_{{ loop.index0 }}" value="{{ education['institution'] }}">
+                          </div>
+                          <div class="form-group">
+                            <label for="degree_{{ loop.index0 }}" class="text-white">Degree:</label>
+                            <input type="text" class="form-control" id="degree_{{ loop.index0 }}" name="degree_{{ loop.index0 }}" value="{{ education['degree'] }}">
+                          </div>
+                          <div class="form-group">
+                            <label for="year_{{ loop.index0 }}" class="text-white">Year:</label>
+                            <input type="text" class="form-control" id="year_{{ loop.index0 }}" name="year_{{ loop.index0 }}" value="{{ education['year'] }}">
+                          </div>
+                    {% endfor %}
+                 {% endif %}
+                 {% if cv['projects'] %}
+                     <h3 class="text-white">Projects</h3>
+                     {% for project in cv['projects'] %}
+                          <div class="form-group">
+                            <label for="project_title_{{ loop.index0 }}" class="text-white">Project Title:</label>
+                            <input type="text" class="form-control" id="project_title_{{ loop.index0 }}" name="project_title_{{ loop.index0 }}" value="{{ project['project_title'] }}">
+                          </div>
+                          <div class="form-group">
+                            <label for="goal_{{ loop.index0 }}" class="text-white">Project Goal:</label>
+                            <textarea class="form-control" id="goal_{{ loop.index0 }}" name="goal_{{ loop.index0 }}" rows="2">{{ project['goal'] }}</textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="description_{{ loop.index0 }}" class="text-white">Project Description:</label>
+                            <textarea class="form-control" id="description_{{ loop.index0 }}" name="project_description_{{ loop.index0 }}" rows="2">{{ project['description'] }}</textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="skills_{{ loop.index0 }}" class="text-white">Skills:</label>
+                            <textarea class="form-control" id="skills_{{ loop.index0 }}" name="project_skills_{{ loop.index0 }}" rows="3">{{ project['skills'] }}</textarea>
+                          </div>
+                     {% endfor %}
+                 {% endif %}
+                 {% if cv['skills'] %}
+                     <h3 class="text-white">Skills</h3>
+                     <div class="form-group">
+                        <label for="skills" class="text-white">Skills:</label>
+                        <textarea class="form-control" id="skills" name="skills" rows="3">{{ cv['skills'] }}</textarea>
+                      </div>
+                 {% endif %}
+                 {% if cv['awards'] %}
+                     <h3 class="text-white">Awards</h3>
+                      <div class="form-group">
+                            <label for="awards" class="text-white">Awards:</label>
+                            <textarea class="form-control" id="awards" name="awards" rows="2">{{ cv['awards'] }}</textarea>
+                      </div>
+                 {% endif %}
+                 {% if cv['languages'] %}
+                     <h3 class="text-white">Languages</h3>
+                      <div class="form-group">
+                            <label for="languages" class="text-white">Languages:</label>
+                            <textarea class="form-control" id="languages" name="languages" rows="2">{{ cv['languages'] }}</textarea>
+                      </div>
+                 {% endif %}
+                 <button type="submit" class="btn btn-primary">Get pdf</button>
+                </form>
+         </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    document.getElementById("pdf-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // Get the form data
+        const formData = new FormData(event.target);
+
+        fetch('{{ url_for("views.generate_pdf") }}', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.blob();
+        })
+        .then(blob => {
+            // Create a temporary download link and click it to download the PDF
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'cv.pdf';
+            link.click();
+            window.URL.revokeObjectURL(url);
+
+            // Redirect the user to the finish page
+            window.location.href = '{{ url_for("finish") }}';
+        })
+        .catch(error => {
+            console.error('Error fetching PDF:', error);
+        });
+    });
+</script>
+
+{% endblock %}

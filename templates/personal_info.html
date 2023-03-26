@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Personal Info - CV Builder{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+
+    .bg-image {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .bg-image::before {
+      content: "";
+      background-image: url('{{ url_for('static', filename='bg.png') }}');
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px); /* Adjust the blur value as desired */
+      position: absolute;
+      width: 110%;
+      height: 110%;
+      top: -5%;
+      left: -5%;
+      z-index: -1;
+    }
+
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    .btn-small {
+      width: 30%;
+      margin-top: 1rem;
+    }
+     .text-center {
+      text-align: center;
+      width: 40%; /* Adjust the width as desired */
+      margin: 0 auto;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="bg-image">
+    <div class="container center">
+         <h1 class="text-white" id="welcome-text">Personal Information</h1>
+         <div class="text-center">
+            <form action="{{ url_for('views.process_personal_info') }}" method="post">
+                <div class="form-group">
+                  <label for="full_name" class="text-white">Full Name:</label>
+                  <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                  <label for="phone" class="text-white">Phone:</label>
+                  <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-group">
+                  <label for="email" class="text-white">Email:</label>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
+                </div>
+                <div class="form-group">
+                  <label for="linkedin" class="text-white">LinkedIn:</label>
+                  <input type="url" class="form-control" id="linkedin" name="linkedin" placeholder="Enter your LinkedIn profile URL" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-small">Next</button>
+            </form>
+         </div>
+    </div>
+  </div>
+{% endblock %}

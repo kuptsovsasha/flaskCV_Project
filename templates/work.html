@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Work - CV Builder{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+
+    .bg-image {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .bg-image::before {
+      content: "";
+      background-image: url('{{ url_for('static', filename='bg.png') }}');
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px); /* Adjust the blur value as desired */
+      position: absolute;
+      width: 110%;
+      height: 110%;
+      top: -5%;
+      left: -5%;
+      z-index: -1;
+    }
+
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    .btn-small {
+      width: 30%;
+      margin-top: 1rem;
+    }
+    .btn-secondary {
+      width: 30%;
+      margin-top: 1rem;
+    }
+     .text-center {
+      text-align: center;
+      width: 40%; /* Adjust the width as desired */
+      margin: 0 auto;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="bg-image">
+    <div class="container center">
+         <h1 class="text-white" id="welcome-text">Work Experience</h1>
+         <div class="text-center">
+            <form action="{{ url_for('views.process_work_experience') }}" method="post" id="work_experience_form">
+              <div class="form-group">
+                <label for="job_title" class="text-white">Job Title:</label>
+                <input type="text" class="form-control" id="job_title" name="job_title" placeholder="Enter your job title" required>
+              </div>
+              <div class="form-group">
+                <label for="start_date" class="text-white">Start Date:</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" required>
+              </div>
+              <div class="form-group">
+                <label for="end_date" class="text-white">End Date:</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" required>
+              </div>
+              <div class="form-group">
+                <label for="company" class="text-white">Company:</label>
+                <input type="text" class="form-control" id="company" name="company" placeholder="Enter the company name" required>
+              </div>
+              <div class="form-group">
+                <label for="skills" class="text-white">Skills:</label>
+                <textarea class="form-control" id="skills" name="skills" rows="3"
+                          placeholder="Enter your skills separated by commas, or select a skill from the drop-down list below" required></textarea>
+              </div>
+                <div class="form-group">
+                  <label for="skill_list" class="text-white">Select skill related to your professional title:</label>
+                  <select class="form-control" id="skill_list">
+                    <option value="" disabled selected>Choose a skill</option>
+                    {% for skill in session['skills'] %}
+                      <option value="{{ skill }}">{{ skill }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              <button type="button" class="btn btn-secondary mr-2" id="add_more">Add more</button>
+              <button type="submit" class="btn btn-primary btn-small">Next</button>
+            </form>
+         </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_js %}
+  <script>
+    document.getElementById("skill_list").addEventListener("change", function() {
+      let skillInput = document.getElementById("skills");
+      let selectedSkill = this.value;
+
+      if (skillInput.value.trim() === "") {
+        skillInput.value = selectedSkill;
+      } else {
+        skillInput.value += ", " + selectedSkill;
+      }
+
+      this.selectedIndex = 0;
+    });
+  </script>
+   <script>
+    let form = document.getElementById("work_experience_form");
+    let formDataList = [];
+
+    document.getElementById("add_more").addEventListener("click", function() {
+        console.log(form)
+      let formData = {
+        "job_title": form.job_title.value,
+        "start_date": form.start_date.value,
+        "end_date": form.end_date.value,
+        "company": form.company.value,
+        "skills": form.skills.value.split(",").map(function(skill) { return skill.trim(); })
+      };
+
+      formDataList.push(formData);
+      form.reset();
+    });
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      let finalFormData = {
+        "job_title": form.job_title.value,
+        "start_date": form.start_date.value,
+        "end_date": form.end_date.value,
+        "company": form.company.value,
+        "skills": form.skills.value.split(",").map(function(skill) { return skill.trim(); })
+      };
+
+      formDataList.push(finalFormData);
+
+      // Send formDataList to your Flask view
+      fetch("{{ url_for('views.process_work_experience') }}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formDataList)
+      })
+      .then(function(response) {
+        if (response.ok) {
+          window.location.href = "{{ url_for('education') }}";
+        } else {
+          alert("Error submitting data");
+        }
+      });
+    });
+  </script>
+{% endblock %}
